@@ -1,6 +1,7 @@
 // import React from 'react'
 import React, { useState, useEffect} from 'react';
 import Registerbg from '../assets/images/Register_bg.svg'
+import backicon from '../assets/images/back.svg'
 import RegisterLeftIcon from '../assets/images/register_left_icon.svg'
 import RegisterRightOne from '../assets/images/register_right-1.svg'
 import RegisterRightTwo from '../assets/images/register_right-2.svg'
@@ -16,16 +17,19 @@ import linkedin from '../assets/images/linkedin.svg'
 import twitter from '../assets/images/twitter.svg'
 import axios from "axios";
 import { browserName } from 'react-device-detect';
-import {Link} from 'react-router-dom';
+import {Link,useHistory} from 'react-router-dom';
 import FacebookLogin from 'react-facebook-login';
+import InstagramLogin from 'react-instagram-login';
 import GoogleLogin from 'react-google-login';
 import LinkedInPage from "./Linkedin";
 import TwitterLogin  from "react-twitter-login";
 import '../assets/css/animation.css';
+import Api from '../Api';
 
 import base_url from './Config';
 
-const Register = ({history}) => {
+const Register = () => {
+  const history= useHistory()
     const [Fullname, setFullname] = useState('');
     const [Email, setEmail] = useState('');
     const [Password, setPassword] = useState('');
@@ -42,7 +46,7 @@ const Register = ({history}) => {
     }
 
     const errorMsg = {
-        color: "red",
+        color: "black",
         fontFamily: "inherit",
         paddingTop: "5px"
     }
@@ -141,8 +145,10 @@ const Register = ({history}) => {
                 ipAddress: ip,
                 network: "LAN",
             }
-            console.log("line 60",formData, browserName)
-            axios.post("http://localhost:3030/api/v1/signup",formData).then(res => {   
+            // console.log("line 60",formData, browserName)
+            Api.signin(formData)
+            // axios.post("http://localhost:3030/api/v1/signup",formData)
+            .then(res => {   
                 console.log("line 63",res)
                 if(res.status === 200) {
                     history.push("/signin")
@@ -150,24 +156,42 @@ const Register = ({history}) => {
             })
         }
     }
+
+
     const responseFacebook = (response) => {
         console.log("hello",response);
         const data={
             accessToken:response.accessToken,
             userID:response.userID
           }
-          axios.post('http://localhost:3030/api/v1/facebooklogin', data
+          axios.post('http://159.89.171.252:3030/api/v1/facebooklogin', data
           ).then(response=>{
+            history.push("/dashboard")
             console.log("facebook response is done",response)
         })
+    }
+    const responseSuccessTweeter = (response) => {
+        console.log(response)
+        const data={
+          tokenId:response.tokenId
+        }
+        axios.post('http://159.89.171.252:3000/linkedin', data
+        ).then(response=>{
+          history.push("/dashboard")
+          console.log(response)
+        })
+    }
+    const responseErrorTweeter=(response)=>{
+        console.log("err",response)
     }
     const responseSuccessGoogle = (response) => {
         console.log(response)
         const data={
           tokenId:response.tokenId
         }
-        axios.post('http://localhost:3030/api/v1/googlelogin', data
+        axios.post('http://159.89.171.252:3030/api/v1/googlelogin', data
         ).then(response=>{
+          history.push("/dashboard")
           console.log(response)
         })
     }
@@ -184,93 +208,213 @@ const Register = ({history}) => {
         email:data.screen_name
         }
     }
-    axios.post('http://localhost:3030/api/v1/twitterlogin', response
+    axios.post('http://159.89.171.252:3030/api/v1/twitterlogin', response
     ).then(response=>{
+      history.push("/dashboard")
         console.log("twitter response is done",response)
     })
     };
 
 
+
+
     return (
-        <div className={['h-screen overflow-hidden']}>
-            <div className={['relative']}>
-            <div className={['sm:flex sm:justify-center sm:items-center sm:right-10 absolute right-20 flex lg:flex-col lg:justify-center top-12 ']}>
-                <Link to="/"><img src={Logo} alt="" className={['mb-2 transform scale-75 slide-in-top']} /></Link>
-                <Link to="dashboard"><button className={['sm:py-1 py-2 px-8 text-sm border font-light rounded-full slide-in-top']}>SKIP</button></Link>
+        <div 
+        className='DashboardMain w-100'
+        // className={['h-screen overflow-hidden']}
+        >
+            <div className={['flex w-11/12 m-0 justify-between testdemo absolute top-8 px-24']}>
+                <p  alt=""
+                style={{fontSize:'40px'}}
+                 className={['transform sm:scale-75']} 
+                style={{zIndex: '1'}} onClick={() => history.goBack()} 
+                >
+                	&#60;</p>
+                <Link to="/"><img src={Logo} alt="" className={['roll-in-left']} /></Link>
             </div>
-            <div className={['w-3/12 2xl:w-1/3 mx-auto pt-32 sm:w-8/12']} style={{zIndex : '1000'}}>
-                <div className={['flex justify-center']}>
-                <img src={Registerusericon} alt="" className={['sm:scale-50 transform lg:scale-75 tilt-in-top-1']} />
+           <img src={Registerbg} alt=""
+             className='bestest'
+             style={{maxHeight:"100%", width:'120%',position:'absolute'}}
+              />
+            <div
+            className=' pt-7 text-right pr-10'
+            style={{height:'18%'}}
+           
+             >
+              
+                <Link
+                  className='h-45'
+                to="dashboard"><button 
+                style={{height:'45%', paddingTop: '4%'}}
+                className={['sm:py-1 h-100 px-8 py-8 text-sm font-light rounded-full border border-solid border-2 border-black slide-in-top']}>SKIP</button></Link>
+            </div>
+           
+            <div
+        
+            className=' mx-auto '
+              style={{height:'60%', width:'33%',marginTop:'-2%'}}>
+                <div 
+                className={['flex justify-center']}
+                style={{height:'20%'}}
+                >
+                <img src={Registerusericon} alt="" 
+                style={{height:'100%',objectFit:'contain'}}
+                // className={['sm:scale-50 transform lg:scale-75 tilt-in-top-1']} 
+                />
                 </div>
-                <form className={[""]} style={{top: "-20rem"}}>
+                <form 
+               
+                style={{height:'80%'}}>
                     <span style ={{color: "red", bottom: "90px"}}>{FullnameError}</span>
-                    <div className={['flex border py-4 px-5 rounded rounded-full mb-10 sm:py-2 sm:mb-6 lg:py-3 lg:mb-8 2xl:py-4 slide-in-fwd-center']} style={{bottom: "100px"}}>
+                    <div 
+                    className='flex border mt-2 registerInpt py-4 px-5 rounded rounded-full mb-10 sm:py-2 sm:mb-6 lg:py-3 lg:mb-8 2xl:py-4 slide-in-fwd-center'
+                    style={{bottom: "100px"}}
+                    >
                         <img src={usericon} alt="" className={['mr-5 transform']} />
                         
                         <input type="text" name="fullname" id="" placeholder="Fullname" 
-                        className={["bg-transparent w-full focus:outline-none border-0"]}
+                        className="bg-transparent h-100 focus:outline-none border-0"
                         style={errorMsg} 
                         value = {Fullname}
                         onChange={e => setFullname(e.target.value)}/>
                     </div>
                     <span style ={{color: "red", top: "90px"}}>{EmailError}</span>
-                    <div className={['flex border py-4 px-5 rounded rounded-full mb-10 sm:py-2 sm:mb-6 lg:py-3 lg:mb-8 2xl:py-4 slide-in-fwd-center']} style={{bottom: "100px"}}>
+                    <div className={['flex registerInpt border py-4 px-5 rounded rounded-full mb-10 sm:py-2 sm:mb-6 lg:py-3 lg:mb-8 2xl:py-4 slide-in-fwd-center']} style={{bottom: "100px"}}>
                         <img src={emailicon} alt="" className={['mr-5 transform scale-75']} />
-                        <input type="text" name="Email" id="" placeholder="Email" className={["bg-transparent w-full focus:outline-none border-0"]}
+                        <input type="text" name="Email" id="" placeholder="Email" 
+                        className={["bg-transparent w-full h-100 focus:outline-none border-0"]}
                          value={Email}
                           onChange={e => setEmail(e.target.value)}/>
                     </div>
                     <span style ={{color: "red", top: "20px"}}>{PasswordError}</span>
-                    <div className={['flex border py-4 px-5 rounded rounded-full mb-10 sm:py-2 sm:mb-6 lg:py-3 lg:mb-8 2xl:py-4 slide-in-fwd-center']} style={{bottom: "100px"}}>
+                    <div className={['flex registerInpt border py-4 px-5 rounded rounded-full mb-10 sm:py-2 sm:mb-6 lg:py-3 lg:mb-8 2xl:py-4 slide-in-fwd-center']} style={{bottom: "100px"}}>
                         <img src={passwordicon} alt="" className={['mr-5 transform scale-75']} />
-                        <input type="password" name="Password" id="" placeholder="Password" className={["bg-transparent w-full focus:outline-none border-0"]} 
+                        <input type="password" name="Password" id="" placeholder="Password"
+                         className={["bg-transparent h-100 w-full focus:outline-none border-0"]} 
                         value={Password}
                          onChange={e => setPassword(e.target.value)}/>
                     </div>
                     <span style ={{color: "red", top: "20px"}}>{RePasswordError}</span>
-                    <div className={['flex border py-4 px-5 rounded rounded-full mb-10 sm:py-2 sm:mb-6 lg:py-3 lg:mb-8 2xl:py-4 slide-in-fwd-center']} style={{bottom: "100px"}}>
+                    <div className={[' registerInpt flex border py-4 px-5 rounded rounded-full mb-10 sm:py-2 sm:mb-6 lg:py-3 lg:mb-8 2xl:py-4 slide-in-fwd-center']} style={{bottom: "100px"}}>
                         <img src={passwordicon} alt="" className={['mr-5 transform scale-75']} />
-                        <input type="password" name="RePassword" id="" placeholder="Re-Password" className={["bg-transparent w-full focus:outline-none border-0"]}
+                        <input type="password" name="RePassword" id=""
+                         placeholder="Re-Password" className={["bg-transparent h-100 w-full focus:outline-none border-0"]}
                         value={RePassword}
                          onChange={e => setRePassword(e.target.value)}/>
                     </div>                    
-                    <div className={['flex justify-center mt-16 sm:mt-8']}>
-                        <button className={['py-2 px-8 text-sm font-light border rounded-full slide-in-fwd-bottom']} onClick={(event) => submitValue(event)}>SIGN UP</button>
+                    <div className={['registerInpt flex justify-center mt-16 sm:mt-8']}>
+                        <button 
+                        style={{height:'50%', width:'20%',fontSize:'1vw'}}
+                        className={['text-sm font-light border rounded-full slide-in-fwd-bottom']} onClick={(event) => submitValue(event)}>SIGN IN</button>
                     </div>
-                </form>
-            </div>
-            <img src={Registerbg} alt="" className={['absolute scale-125 transform object-contain']} style={{top : '520px', zIndex: '-1'}} />
-            <img src={RegisterLeftIcon} alt="" className={['absolute transform scale-90 -left-10 hidden lg:block lg:scale-75 lg:-left-52 2xl:scale-90 2xl:-left-10']} style={{top : '300px', zIndex: '-1'}} />
-            <img src={RegisterRightOne} alt="" className={['absolute transform scale-90 right-10 hidden lg:block lg:scale-75 lg:right-0 2xl:scale-90 2xl:right-10']} style={{top : '300px', zIndex: '-1'}} />
-            <img src={RegisterRightTwo} alt="" className={['absolute transform scale-90 -right-10 hidden lg:block lg:scale-75 lg:-right-20 2xl:scale-90 2xl:right-10']} style={{top : '300px', zIndex: '-1'}} />
-            <div className={["flex justify-center pt-10 pb-12 sm:pt-12 lg:pt-6 lg:h-16 md:h-12 2xl:pt-32"]} style={{marginBottom: "-100px"}}>
-                <img src={facebook} alt="" className={['transform lg:scale-75 sm:scale-50']} />
-                <img src={instagram} alt="" className={['transform lg:scale-75 sm:scale-50']} />
-                <img src={googleplus} alt="" className={['transform lg:scale-75 sm:scale-50']} />
-                <img src={linkedin} alt="" className={['transform lg:scale-75 sm:scale-50']} />
-                <img src={twitter} alt="" className={['transform lg:scale-75 sm:scale-50']} />
-               
-                    <FacebookLogin
-                        appId="244607770821133"
-                        autoLoad={false}
-                        callback={responseFacebook}
-                    />
+                    <div
+            className=' absolute socialMedia'
+              style={{width: "50%"}}
+              >
+                {/* <img src={facebook}
+                className='socialLinks'
+                style={{border:'solid'}}
+                alt="" className={['transform lg:scale-25 sm:scale-50']} />
+                <img src={instagram}
+                  className='socialLinks'
+                onClick={(e)=>Click(e)}
+                
+                alt="" className={[' px-0 transform lg:scale-25 sm:scale-50']} />
+                <img src={googleplus} 
+                alt="" className={[' px-0 transform lg:scale-25 sm:scale-50']} />
+                <img src={linkedin} alt="" className={['transform px-0 lg:scale-25 sm:scale-50']} />
+                <img src={twitter} alt="" className={['transform px-0 lg:scale-25 sm:scale-50']} />
+                */}
+                 
+                                {/* <FacebookLogin
+                                
+                             icon={ <img src={facebook}
+                             alt="" className={['transform h-100 facebook ']} />}
+                                appId="244607770821133"
+                                autoLoad={false}
+                                callback={responseFacebook}
+                                textButton=''
+                                style={{ maxWidth: '60%' }}
+                              fields="name,email,picture"
+                            
+                              /> */}
+
+                                  <FacebookLogin
+                                
+                                icon={ <img src={facebook}
+                                alt="" className={['transform h-100 facebook ']} />}
+                                   appId="510058686761446"
+                                   autoLoad={false}
+                                   callback={responseFacebook}
+                                   textButton=''
+                                   style={{ maxWidth: '60%' }}
+                                 fields="name,email,picture"
+                               
+                                 />                                              
+                      <InstagramLogin
+                      cssClass='background-none h-100'
+                        clientId="5fd2f11482844c5eba963747a5f34556"
+                        buttonText=""
+                        // onSuccess={responseInstagram}
+                        // onFailure={responseInstagram}
+                      >
+                        <img src={instagram}
+                       alt="" className={[' px-0 h-100 instagram transform ']} />
+                      </InstagramLogin>
+
+
                     <GoogleLogin
+                    className='h-100'
+                     render={renderProps => (
+                      <img onClick={renderProps.onClick} src={googleplus} />
+                    )}
+                    
+                        buttonText=''
                         clientId="1015319600953-vs0ae0bm9eua4e4rrhtn0os2cdll77n1.apps.googleusercontent.com"
-                        buttonText="Login with Google"
                         onSuccess={responseSuccessGoogle}
                         onFailure={responseErrorGoogle}
                         cookiePolicy={'single_host_origin'}
                     />
-                    <LinkedInPage />
+                    <LinkedInPage
+                    
+                    />
+       
                     <TwitterLogin 
                         authCallback={authHandler}
                         consumerKey="1asSwpbFuICXfIxt9nikswjM5" 
                         consumerSecret="QoZ0yqBFeN67wuUI4HxVJOXRKxPPSYW6qbmCdtYgYeh3bm4AJ2"
-                    />
+                    >
+                      <img src={twitter} alt="" className={[' instagram transform px-0']} />
+                    </TwitterLogin>
                  
             </div>
-        </div>
+      
+                </form>
+          
+            </div>
+        
+            <img src={RegisterLeftIcon} alt=""
+
+            className={['absolute transform scale-90 -left-0  xl:block']}
+            style={{top : '25%',height:'75%',width:'35%'}} />
+            <img src={RegisterRightOne} alt="" 
+            className={['absolute transform scale-90 right-14  xl:block']} 
+            style={{top : '35%',height:'65%'}} />
+            <img src={RegisterRightTwo} alt="" 
+            className={['absolute transform scale-90 right-0  xl:block']} 
+            style={{top : '35%',height:'65%'}} />
+
+
+            {/* <img src={RegisterLeftIcon} alt=""
+             className='absolute transform scale-90 -left-10 hidden lg:block lg:scale-75 lg:-left-52 2xl:scale-90 2xl:-left-10'
+              style={{top : '300px', zIndex: '-1'}} />
+            <img src={RegisterRightOne} alt=""
+             className='absolute transform scale-90 right-10 hidden lg:block lg:scale-75 lg:right-0 2xl:scale-90 2xl:right-10'
+              style={{top : '300px', zIndex: '-1'}} />
+            <img src={RegisterRightTwo} alt=""
+             className='absolute transform scale-90 -right-10 hidden lg:block lg:scale-75 lg:-right-20 2xl:scale-90 2xl:right-10'
+              style={{top : '300px', zIndex: '-1'}} /> */}
+         
         </div>
     )
 }

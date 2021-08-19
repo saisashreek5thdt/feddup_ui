@@ -5,15 +5,28 @@ import HomeIllustration from "../assets/images/Home_illustration.svg";
 import HomeUser from "../assets/images/Home_user.svg";
 import {Link} from 'react-router-dom';
 import '../assets/css/animation.css';
+import './home.css'
 
 const Home = () => {
   return (
-    <div className={["relative w-screen"]}>
-      <img src={bg} alt="" className={["h-screen w-screen object-cover"]} />
-      <div className={["absolute top-0 left-0 right-0 py-12"]}>
+    <div 
+    // className={["relative w-screen"]}
+    className='DashboardMain w-100'
+    >
+      <img src={bg} alt="" 
+      className='mainImg'
+      // className={["h-screen w-screen object-cover"]} 
+      />
+      <div 
+      // className='100'
+      className={["absolute top-0 left-0 h-75 right-0 pt-8"]}
+      >
         <div className={["flex w-10/12 mx-auto justify-between"]}>
           <Link to="/">
-            <img src={Logo} className={['roll-in-right']} alt="" />
+            <img src={Logo} 
+            className={['roll-in-right']} 
+            // className='testest'
+            alt="" />
           </Link>
           <ul className={["flex align-center items-center"]}>
             <li className="scale-in-hor-center"> 

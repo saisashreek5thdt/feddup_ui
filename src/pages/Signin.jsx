@@ -11,6 +11,7 @@ import passwordicon from '../assets/images/password-icon.svg';
 import {Link} from 'react-router-dom';
 import '../assets/css/animation.css';
 import axios from "axios";
+import Api from '../Api';
 // import emailicon from '../assets/images/email-icon.svg';
 
 import base_url from './Config';
@@ -57,7 +58,9 @@ const Signin = ({history}) => {
                 username: Username,
                 password: Password
             }
-            axios.post("http://localhost:3030/api/v1/login/",formData).then(res => {  
+        
+              Api.login(formData)
+            .then(res => {  
                 console.log(res,"resresres") 
                 if(res.status === 200) {
                     if(res.data.token) {
@@ -77,51 +80,101 @@ const Signin = ({history}) => {
                     setMsg(res.data.msg);
                 }
             })
+            .catch((err)=>{
+                console.log(err)
+            })
         }
     }
 
 
     return (
-        <div className={['h-screen overflow-hidden']}>
-            <div className={['flex justify-between absolute top-8 w-full px-24']}>
+        <div 
+        // className={['h-screen overflow-hidden']}
+        className='DashboardMain  d-flex flex-column w-100'
+        >
+             <img src={loginbg} alt="" 
+            className={[' absolute ']} 
+            style={{height:'100%',width:'100%' ,objectFit:'cover'}} />
+            <div className={[' testdemo absolute top-8 px-24']}>
                 <img src={backicon} alt="" className={['transform sm:scale-75']} style={{zIndex: '1'}} onClick={() => history.goBack()} />
-                <Link to="/"><img src={Logo} alt="" className={['transform scale-90 slide-in-top']} /></Link>
+                <Link to="/"><img src={Logo} alt="" className={['roll-in-left']} /></Link>
             </div>
-            <div className={['xl:w-3/12 mx-auto pt-10 sm:w-9/12 sm:pt-36 md:pt-52 lg:w-2/4']} style={{zIndex : '1000'}}>
-                <div className={['flex justify-center']}>
-                <img src={Registerusericon} alt="" className={['transform lg:scale-100 sm:scale-50 tilt-in-top-1']} />
+            <div
+             className={['xl:w-3/12 flex-column mx-auto pt-0 sm:w-9/12 sm:pt-36 md:pt-20 lg:w-2/4']}
+            
+            style={{zIndex : '1000',height:'80%'}}>
+                <div 
+                  style={{height:'20%'}}
+                className={['flex justify-center']}>
+                <img src={Registerusericon}
+                    style={{height:'100%'}}
+                alt="" className={['transform lg:scale-100 sm:scale-50 tilt-in-top-1']} />
                 </div>
-                <form className={["mt-2"]}>
+                <form
+                    style={{height:'80%',width:'100%'}}
+                    // className={["mt-2 d-flex justify-center flex-column"]}
+                    className='loginForm mx-auto mt-3'
+                    >
                     <center><span style={{color: "white", textAlign: "center !important", textTransform: "capitalize"}}>{UsernameError}</span></center>
-                    <div className={['flex border xl:py-4 px-5 rounded rounded-full mb-14 bg-white sm:py-3 sm:mb-8 slide-in-fwd-center']}>
-                        <img src={usericon} alt="" className={['mr-5 transform']} />
-                        <input type="text" name="Username" id="" placeholder="Username" className={["bg-transparent w-full focus:outline-none border-0"]} 
+                    <div 
+                       style={{height:'15%',width:'100%'}}
+                    className={['flex border px-5 rounded rounded-full mb-14 bg-white sm:py-1 sm:mb-8 slide-in-fwd-center']}>
+                        <img src={usericon} alt="" className={['mr-5  transform']} />
+                        <input type="text"
+                         style={{height:'100%',width:'100%'}}
+                        name="Username" id="" placeholder="Username" 
+                        className={["bg-transparent w-full focus:outline-none border-0"]} 
                         value={Username}
                         onChange={e => setUsername(e.target.value)}/>
                     </div>
                     <center><span style={{color: "white", textAlign: "center !important", textTransform: "capitalize"}}>{PasswordError}</span></center>
-                    <div className={['flex border xl:py-4 px-5 rounded rounded-full mb-10 bg-white opacity-80 sm:py-3 sm:mb-8 slide-in-fwd-center']}>
+                    <div
+                       style={{height:'15%',width:'100%'}}
+                    className={['flex border  px-5 rounded rounded-full mb-10 bg-white opacity-80 sm:py-1 sm:mb-8 slide-in-fwd-center']}>
                         <img src={passwordicon} alt="" className={['mr-5 transform scale-75']} />
-                        <input type="password" name="Password" id="" placeholder="Password" className={["bg-transparent w-full focus:outline-none border-0"]}
+                        <input type="password"
+                         style={{height:'100%',width:'100%'}}
+                         name="Password" id="" placeholder="Password" 
+                         className={["bg-transparent w-full focus:outline-none border-0"]}
                         value={Password}
                          onChange={e => setPassword(e.target.value)} />
                     </div>                    
-                    <div className={['text-center mt-12 slide-in-fwd-center']} style={{marginTop: "-12px"}}>
-                        <button className={['py-2 px-8 text-sm font-light bg-white border rounded-full']} onClick={(event) => submitValue(event)}>SIGN IN</button>
+                    <div className={['text-center mt-5 slide-in-fwd-center']}
+                     style={{height:'10%'}}>
+                        <button
+                          style={{height:'100%',textAlign:'center'}}
+                        className={['py-2 px-8 text-sm font-light bg-white border rounded-full']} onClick={(event) => submitValue(event)}>SIGN IN</button>
                     </div>
                     {msg}
-                    <div className={['flex justify-center mt-4']} style={{zIndex : '10000'}}>
-                        <Link to="adminlogin"><button className={['sm:text-gray-600 py-2 px-8 mx-4 text-sm font-light xl:text-white border rounded-full cursor-pointer slide-in-fwd-bottom']} onClick={() => console.log('admin')}>ADMIN</button></Link>
-                        <Link to="dashboard"><button className={['py-2 px-8 mx-4 sm:text-gray-600 text-sm font-light xl:text-white border rounded-full cursor-pointer slide-in-fwd-bottom']} onClick={() => history.push('dashboard')}>SKIP</button></Link>
+                    <div className={['flex justify-center  mt-4']} style={{zIndex : '10000',height:'10%'}}>
+                        <Link to="adminlogin">
+                        <button 
+                         style={{height:'100%',textAlign:'center'}}
+                        className={['sm:text-gray-600 py-2 px-8 mx-4 border-white rounded-full Round_btn text-sm font-light xl:text-white border rounded-full cursor-pointer slide-in-fwd-bottom']} onClick={() => console.log('admin')}>ADMIN</button></Link>
+                        <Link to="dashboard">
+                            <button 
+                         style={{height:'100%',textAlign:'center'}}
+                        className={['py-2 px-8 mx-4  Round_btn sm:text-gray-600 text-sm font-light xl:text-white border rounded-full cursor-pointer slide-in-fwd-bottom']} onClick={() => history.push('dashboard')}>SKIP</button></Link>
                     </div>
                     <Link to="/forgotpassword"> <p className={['text-white text-center mt-6 pulsate-fwd lg:text-black']}>Forgot Password ? <span className={['text-gray-100 lg:text-black']}>Click Here...</span> </p> </Link>
                 </form>
             </div>
-            <img src={loginbg} alt="" className={['-mt-35 absolute top-0 2xl:h-auto xl:h-auto lg:h-auto md:h-auto']} style={{zIndex: '-1'}} />
-            <img src={RegisterLeftIcon} alt="" className={['absolute transform scale-90 -left-10 hidden xl:block']} style={{top : '100px', zIndex: '1'}} />
-            <img src={loginrunnning} alt="" className={['absolute transform scale-90 right-32 hidden xl:block']} style={{top : '230px', zIndex: '0'}} />
-            <div className={['flex justify-center']} style={{zIndex : '-1000'}}>
-                <img src={Logo} alt="" className={['xl:mt-24 sm:mt-12']} />
+           
+            <img src={RegisterLeftIcon} alt=""
+
+             className={['absolute transform scale-90 -left-10  xl:block']}
+              style={{top : '100px',height:'75%'}} />
+            <img src={loginrunnning} alt="" 
+            className={['absolute transform scale-90 right-32  xl:block']} 
+            style={{top : '150px',height:'75%'}} />
+            <div className={['flex justify-center']}
+            style={{height:'8%'}}
+             >
+                <img src={Logo}
+                 style={{height:'100%',position:'relative'}}
+                alt=""
+                 className={['mt-10']}
+                  />
             </div>
         </div>
     )
