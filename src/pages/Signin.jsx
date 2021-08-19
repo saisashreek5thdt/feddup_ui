@@ -56,7 +56,7 @@ const Signin = ({history}) => {
         if (handleVallidation()) {
             const formData = {
                 username: Username,
-                password: Password
+                password: Password  
             }
         
               Api.login(formData)
@@ -90,7 +90,7 @@ const Signin = ({history}) => {
     return (
         <div 
         // className={['h-screen overflow-hidden']}
-        className='DashboardMain  d-flex flex-column w-100'
+        className='DashboardMain d-flex flex-column w-100'
         >
              <img src={loginbg} alt="" 
             className={[' absolute ']} 
