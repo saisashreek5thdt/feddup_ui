@@ -90,8 +90,7 @@ const Signin = ({history}) => {
     return (
         <div 
         // className={['h-screen overflow-hidden']}
-        className='DashboardMain d-flex flex-column w-100'
-        >
+        className='DashboardMain d-flex flex-column w-100'>
              <img src={loginbg} alt="" 
             className={[' absolute ']} 
             style={{height:'100%',width:'100%' ,objectFit:'cover'}} />
